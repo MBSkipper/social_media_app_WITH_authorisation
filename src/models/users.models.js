@@ -11,15 +11,19 @@ const userSchema = mongoose.Schema ({
     email: {
         type: String,
         required: [true, 'Email is required'],
-        unique: [true, 'Another user has this email'],
+        unique: [true, 'Another user has this email']
+    },
+    password: {
+        type: String,
+        required: [true, 'Password is required']
     },
     fullName: {
         type: String,
-        required: [true, 'Full name is required'],
+        required: [true, 'Full name is required']
     },
     bio: {
         type: String,
-        minLength: [20,'At least 20 characters required'],
+        minLength: [20,'At least 20 characters required']
     },
     profilePic: {
         type: String

@@ -4,14 +4,16 @@ const upload = require('../middlewares/upload') // enables use of file upload if
 
 const {
     fetchUsers,
-    createUser,
+    signUpUser,
+    signInUser,
     updateUser,
     deleteUser
 } = require('../controllers/users.controllers')
 
 router.get('/users',fetchUsers, )
 
-router.post('/users', upload.single('profilePic'), createUser)
+router.post('/users/signup', upload.single('profilePic'), signUpUser)
+router.post('/users/signin', signInUser)
 
 router.patch('/users/:id', upload.single('profilePic'), updateUser)
 

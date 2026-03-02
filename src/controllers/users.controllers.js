@@ -1,5 +1,5 @@
-const Post = require('../models/post.models')
 const User = require('../models/users.models')
+const bcrypt = require('bcrypt')
 
 const fetchUsers = async (req, res) => {
     try {
@@ -23,13 +23,16 @@ const fetchUsers = async (req, res) => {
     }
 }
 
-const createUser = async (req, res) => {
+const signUpUser = async (req, res) => {
     try {
-        const { username, email, fullName, bio } = req.body
+        const { username, email, password, fullName, bio } = req.body
+
+        const encryptedPassword = await bcrypt.hash(password, 10)
 
         await User.create({
             username, 
             email, 
+            password: encryptedPassword,
             fullName, 
             bio,
             profilePic: req.file ? `/uploads/${req.file.filename}` : undefined
@@ -37,7 +40,40 @@ const createUser = async (req, res) => {
 
         res.json({
             status: 'SUCCESS',
-            message: 'User created successfully!'
+            message: 'User registered successfully!'
+        })
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({
+            status: "FAILED",
+            error: error.message
+        })
+    }
+}
+
+const signInUser = async (req, res) => {
+    try {
+        const { email, password } = req.body
+
+        const user = await User.findOne({ email })
+        if(!user) {
+            return res.status(401).json ({
+                status: 'FAILED',
+                message: 'User with this email does not exist.  Please register first.'
+            })
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password )
+        if(!passwordMatch) {
+            return res.status(401).json ({
+                status: 'FAILED',
+                message: 'Invalid credentials'
+            })
+        }
+
+        res.json({
+            status: 'SUCCESS',
+            message: 'User logged in successfully!'
         })
     } catch(error) {
         console.error(error);
@@ -89,7 +125,8 @@ const deleteUser = async (req, res) => {
 
 module.exports = {
     fetchUsers,
-    createUser,
+    signUpUser,
+    signInUser,
     updateUser,
     deleteUser
 }
@@ -102,5 +139,9 @@ NOTES TO CODE
  Line 34 - profilePic: req.file ? `/uploads/${req.file.filename}` : undefined - this makes upload of profile pic optional so that if no file is uploaded the server does not crash
 
  Line 55 - user can only update fullName and bio, the rest of the document cannot be updated
+
+ Line 58 - the findOne method in mongoose is neater here 
+
+ Line 66 - const passwordMatch = await bcrypt.compare(password, user.password - user.password is teh encrypted password.  Compare is a method of bcrypt - refer to bcrypt documentation
  
  */

@@ -73,68 +73,61 @@ mongoose.connect(process.env.MONGODB_URL)
 
  */
 
-/* DESIGN NOTES
-Social Media App Requirements
-- Model
+/* DESIGN NOTES REQUIREMENTS
+Social Media App - with authentication 
+The changes required to the design are listed below
+
+- Model 
+    Changes required 
     - User
-        - username (String, unique)
-        - email (String, unique)
-        - fullName (String)
-        - bio (String)
-        - profilePic (Sting because the image will be a url link)
-        - timestamps (createdAt, updatedAt)
+        - Password (String)
+        - No other changes required to User, Posts or Comment Models
 
-    - Post - many:1 relationship ie one user multiple posts
-        - author (ObjectId ref - > refers to User model)
-        - content (String)
-        - postPic (String)
-        - likes (Array[ObjectId ref - > User)]) - see comment sect'n below
-        - timestamps (Date)
+- Middleware (Auth Middlwares)
+    - Authentication middleware required
+    - Authorisations middlewares required
 
-    - Comment many:1 relationship ie one user multiple comments
-        - post (ObjectId ref - > refers to Post model) relationship
-        - author (ObjectId ref - > refers to User model) relationship
-        - content (String)
-        - timestamps (Date)
+- Routes: NOTE all routes are protected 
+    - remember there is a route route which is normally publicly accessible
+    - all the other routes listed below need to be private routes requiring authentication
 
-- Routes:
     - users
         - GET/users (READ) - gets complete list of users
+            - Response body: Remove sensitive data (email, password)
         - POST/users (CREATE) 
+            - POST /users/ signup
+                - Authentication Flow: Register a user + bcrypt
+            - POST /users/ sign
+                - Authentication Flow: Signing in a user + bcrypt + jwt
         - PATCH/users/:id (UPDATE)
+            - Authorisation: User can only update their profile
         - DELETE/users/:id (DELETE)
+            - Authorisation: User can delete only their profile
+
         - GET/users/:id (READ) - get a specific user
+
     - posts 
         - GET/posts ?userId= (READ) - get posts from a specific user
         - POST/posts (CREATE) 
+            Authorisation: User can create a post only for their account
         - PATCH/posts/:id (UPDATE)
+            Authorisation: A post only be updated by the author
         - DELETE/posts/:id (DELETE)
+            Authorisation: A post only be deleted by the author
         - GET/posts/:id (READ) - get a specific post
         - POST/posts/:id/like-toggle (CREATE) - enables a like to be added 
+            Authorisation: A user can like/unlike only from their account
+
     -comment
         - GET/comments?postId= (READ) - get all comments related to a specific post
         - POST/comments (CREATE) 
+            Authorisation: User can a post a comment only for their account
         - PATCH/comments/:id (UPDATE)
+            Authorisation: A comment can only be updated by the author
         - DELETE/comments/:id (DELETE)
+            Authorisation: A comment can only be deleted by the author or the author of the post
 
-    - notes about routes
-        - to decide if something classifies as a model or not, check does it have:
-            - several routes or functionalities?
-            - a complete lifecycle?
-            - here it is true for users, posts and comments
-            - here it is not true for likes (like will be on or off only; adding or removing some data)
-       
-General notes about databases
-    - Database type selection (ie SQL or non-SQL) based on various factors
-    - Some websites use a mix of databases - each database has adv & disadv
-        - scalability 
-        - database suitability for server
-        - not sure if data will change - non SQL
-        - data will not change (fixed Schema) - SQL
-        - transaction support required (ie payment processing) - SQL
-        - these are advanced topics in DevOps 
-        - none db is not better than another but one may be better than another in specific scenarios
-
+    
 
 
 
