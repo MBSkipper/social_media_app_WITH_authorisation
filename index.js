@@ -80,7 +80,7 @@ The changes required to the design are listed below
 - Model 
     Changes required 
     - User
-        - Password (String)
+        - Password (String) ✅
         - No other changes required to User, Posts or Comment Models
 
 - Middleware (Auth Middlwares)
@@ -96,9 +96,9 @@ The changes required to the design are listed below
             - Response body: Remove sensitive data (email, password)
         - POST/users (CREATE) 
             - POST /users/ signup
-                - Authentication Flow: Register a user + bcrypt
+                - Authentication Flow: Register a user + bcrypt ✅
             - POST /users/ sign
-                - Authentication Flow: Signing in a user + bcrypt + jwt
+                - Authentication Flow: Signing in a user + bcrypt + jwt ✅
         - PATCH/users/:id (UPDATE)
             - Authorisation: User can only update their profile
         - DELETE/users/:id (DELETE)

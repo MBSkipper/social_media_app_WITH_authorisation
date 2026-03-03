@@ -1,5 +1,6 @@
 const User = require('../models/users.models')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const fetchUsers = async (req, res) => {
     try {
@@ -71,9 +72,13 @@ const signInUser = async (req, res) => {
             })
         }
 
+        const { _id } = user
+        const token = jwt.sign({ _id }, process.env.JWT_SECRET_KEY, { expiresIn: 24*60*60 })
+
         res.json({
             status: 'SUCCESS',
-            message: 'User logged in successfully!'
+            message: 'User logged in successfully!',
+            token
         })
     } catch(error) {
         console.error(error);
@@ -143,5 +148,11 @@ NOTES TO CODE
  Line 58 - the findOne method in mongoose is neater here 
 
  Line 66 - const passwordMatch = await bcrypt.compare(password, user.password - user.password is teh encrypted password.  Compare is a method of bcrypt - refer to bcrypt documentation
+
+ Line 75 - deconstruct to get id from user
+
+ Line 76 - const token = jwt.sign({ _id }, process.env.JWT_SECRET_KEY), { expiresIn: 24*60*60 } - this uses jsonwebtoken and method sign ie jwt.sign, a SECRET KEY has been created in the .env file and the option expiresIn created in seconds for one day hence 24*60*60.  It is assigned to the constant as the token.
+
+ Line 81 - the token is also returned in the client response
  
  */
