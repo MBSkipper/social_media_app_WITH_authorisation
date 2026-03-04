@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 
 const fetchUsers = async (req, res) => {
     try {
-        const users = await User.find().select('username fullName profilePic bio -_id') 
+        const users = await User.find().select('username fullName profilePic bio') //-_id') //NOTE that -_id needs to be removed to get id's for testing
 
         users.map(user => {
             user.profilePic = process.env.BASE_URL + user.profilePic
@@ -89,12 +89,21 @@ const signInUser = async (req, res) => {
     }
 }
 
+
 const updateUser = async (req, res) => {
     try {
         const { id } = req.params
         const { fullName, bio } = req.body
 
-        await User.findByIdAndUpdate( id, { fullName,bio })
+        const updatedUser = await User.findByIdAndUpdate( 
+            id, 
+            { $set: { fullName, bio } },
+            { returnDocument: "after", runValidators: true } // <-- key change
+        )
+        
+        if (!updatedUser) {
+            return res.status(404).json({ status: "FAILED", message: "User not found" })
+        }
 
         res.json({
             status:'SUCCESS',
@@ -108,7 +117,36 @@ const updateUser = async (req, res) => {
             error: error.message
         })
     }
+} 
+    
+
+/*CHAT GPT CODE FOR updateUser
+const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { fullName, bio } = req.body
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { $set: { fullName, bio } },
+      { new: true, runValidators: true } // <-- key change
+    )
+
+    if (!updatedUser) {
+      return res.status(404).json({ status: "FAILED", message: "User not found" })
+    }
+
+    res.json({
+      status: "SUCCESS",
+      message: "User updated successfully!",
+      user: updatedUser
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ status: "FAILED", error: error.message })
+  }
 }
+********************************** */
 
 const deleteUser = async (req, res) => {
     try{

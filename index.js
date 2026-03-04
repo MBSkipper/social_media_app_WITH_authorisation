@@ -94,7 +94,7 @@ The changes required to the design are listed below
 
     - users (All routes are protected except signUp and signIn) ✅
         - GET/users (READ) - gets complete list of users
-            - Response body: Remove sensitive data (email, password)
+            - Response body: Remove sensitive data (email, password) ✅
         - POST/users (CREATE) 
             - POST /users/ signup
                 - Authentication Flow: Register a user + bcrypt ✅
