@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 
 const fetchUsers = async (req, res) => {
     try {
-        const users = await User.find() 
+        const users = await User.find().select('username fullName profilePic bio -_id') 
 
         users.map(user => {
             user.profilePic = process.env.BASE_URL + user.profilePic
@@ -139,7 +139,9 @@ module.exports = {
 /*
 NOTES TO CODE
 
- Line 7-8 - attaches base url to the uploaded image ie profilePic.  Full url appears in database data NOTE it is not clickable to click thru to the uploaded image
+Line 7 - The code:  .select('username fullName profilePic bio') this is a mongoose method that enables only the non sensitive parts of the user details to be displayed ie it excludes email and password, when GET method for the all users API returns data it excludes email and password because only the selected fields are listed.  To remove the id automatically created by the server -_id (minus _id) removes it
+
+ Line 9-10  - attaches base url to the uploaded image ie profilePic.  Full url appears in database data NOTE it is not clickable to click thru to the uploaded image. 
  
  Line 34 - profilePic: req.file ? `/uploads/${req.file.filename}` : undefined - this makes upload of profile pic optional so that if no file is uploaded the server does not crash
 
