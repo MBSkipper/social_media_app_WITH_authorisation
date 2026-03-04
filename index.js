@@ -112,7 +112,7 @@ The changes required to the design are listed below
     - posts (All routes are protected) ✅
         - GET/posts ?userId= (READ) - get posts from a specific user
         - POST/posts (CREATE) 
-            Authorisation: User can create a post only for their account
+            Authorisation: User can create a post only for their account ✅
         - PATCH/posts/:id (UPDATE)
             Authorisation: A post only be updated by the author
         - DELETE/posts/:id (DELETE)
