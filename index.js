@@ -60,7 +60,7 @@ mongoose.connect(process.env.MONGODB_URL)
 
  Line 18 - app.use('', userRoutes) so any request whose URL starts with /users, then hand control to userRoutes.  So this means when a request comes in…if the path begins with /users…pass the request to userRoutes (declared on line 7 and links to users/routes file).So use this router for any request starting with /users. Without this line of code the route exists but would be unreachable (404).
  
- Line 22 - '/' is the root URL, (req, res) => { } is the route handler function
+ Line 22 - this is the root route where '/' is the root URL, (req, res) => { } is the route handler function
  Line 23 - res.json(...) is the response back to the client
  Line 23 - 26 - {message: .., now: ... } is the object sent back to the client to confirm the server is running, that the routing works and JSON responses work
  Line 29 - mongoose.connect(process.env.MONGODB_URL) - mongoose.connect() tries to connect your Node.js app to MongoDB and (process.env.MONGODB_URL) reads the environment variables whist keeping them secret 
@@ -84,14 +84,15 @@ The changes required to the design are listed below
         - No other changes required to User, Posts or Comment Models
 
 - Middleware (Auth Middlwares)
-    - Authentication middleware required
+    - Authentication middleware required ✅
     - Authorisations middlewares required
 
-- Routes: NOTE all routes are protected 
-    - remember there is a route route which is normally publicly accessible
+- Routes: 
+    NOTE all routes are protected except signUp and signIn
+    - signUp and signIn must normally publicly accessible for users to register or login
     - all the other routes listed below need to be private routes requiring authentication
 
-    - users
+    - users (All routes are protected except signUp and signIn) ✅
         - GET/users (READ) - gets complete list of users
             - Response body: Remove sensitive data (email, password)
         - POST/users (CREATE) 
@@ -106,7 +107,7 @@ The changes required to the design are listed below
 
         - GET/users/:id (READ) - get a specific user
 
-    - posts 
+    - posts (All routes are protected) ✅
         - GET/posts ?userId= (READ) - get posts from a specific user
         - POST/posts (CREATE) 
             Authorisation: User can create a post only for their account
@@ -118,7 +119,7 @@ The changes required to the design are listed below
         - POST/posts/:id/like-toggle (CREATE) - enables a like to be added 
             Authorisation: A user can like/unlike only from their account
 
-    -comment
+    - comment (All routes are protected) ✅
         - GET/comments?postId= (READ) - get all comments related to a specific post
         - POST/comments (CREATE) 
             Authorisation: User can a post a comment only for their account

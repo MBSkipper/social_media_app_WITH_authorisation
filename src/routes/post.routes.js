@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-//const upload = require('../middlewares/upload') // enables use of file upload if needed 
+const upload = require('../middlewares/upload') // enables use of file upload if needed 
+const { isAuthenticated } = require('../middlewares/auth.middlewares')
 
 const {
     fetchPosts,
@@ -9,6 +10,8 @@ const {
     deletePost,
     togglePostLike
 } = require('../controllers/post.controllers')
+
+router.use(isAuthenticated) //protects all routes below
 
 router.get('/posts',fetchPosts, )
 
