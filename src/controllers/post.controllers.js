@@ -4,11 +4,17 @@ const User = require('../models/users.models')
 const fetchPosts = async (req, res) => {
     try {
         const { author } = req.query
-        const post = await Post.find( { author }).populate('author', 'username fullName').populate('likes', 'username fullName')
+
+        let posts 
+        if(author) {
+        posts = await Post.find( { author }).populate('author', 'username fullName').populate('likes', 'username fullName')
+        } else {
+        posts = await Post.find().populate('author', 'username fullName').populate('likes', 'username fullName')    
+        }
 
         res.json({
             status: 'SUCCESS',
-            data: post
+            data: posts
         })
     } catch(error) {
         console.error(error);
@@ -22,9 +28,10 @@ const fetchPosts = async (req, res) => {
 
 const createPost = async (req, res) => {
     try {
-        const { author, content } = req.body
+        const currentUserId = req._id
+        const { content } = req.body
 
-        const user = await User.findById(author) 
+        const user = await User.findById(currentUserId) 
         if(!user) {
             return res.status(400).json({
             status: "FAILED",
@@ -33,7 +40,7 @@ const createPost = async (req, res) => {
         } 
 
         await Post.create({
-            author,
+            author: currentUserId,
             content
         })
 
@@ -153,5 +160,8 @@ module.exports = {
 
 /**
  NOTES TO CODE
- Line 7 - const post = await Post.find( { author }).populate('author', 'username fullName'), this element - .populate('author', 'username fullName') populates the GET post with the author's username and fullName when the author's posts are searched in Postman
+ Line 8 - enables posts
+ Line 9 - if the author is known then on following lines 10 get all the posts from that author
+ Line 10 - posts = await Post.find( { author }).populate('author', 'username fullName'), this element - .populate('author', 'username fullName') populates the GET post with the author's username and fullName when the author's posts are searched in Postman
+Line 11 - 12 if the author is not named list get all posts
  */

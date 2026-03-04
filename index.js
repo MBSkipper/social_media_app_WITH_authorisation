@@ -85,7 +85,9 @@ The changes required to the design are listed below
 
 - Middleware (Auth Middlwares)
     - Authentication middleware required ✅
-    - Authorisations middlewares required
+    - Authorisations middlewares required 
+        - users 
+            isProfileOwner ✅
 
 - Routes: 
     NOTE all routes are protected except signUp and signIn
@@ -101,9 +103,9 @@ The changes required to the design are listed below
             - POST /users/ sign
                 - Authentication Flow: Signing in a user + bcrypt + jwt ✅
         - PATCH/users/:id (UPDATE)
-            - Authorisation: User can only update their profile
+            - Authorisation: User can only update their profile ✅
         - DELETE/users/:id (DELETE)
-            - Authorisation: User can delete only their profile
+            - Authorisation: User can delete only their profile ✅
 
         - GET/users/:id (READ) - get a specific user
 
