@@ -12,9 +12,16 @@ const {
     
 router.use(isAuthenticated) //protects all routes below
 
-router.get('/comments',fetchComments, )
+router.get('/comments',fetchComments)
 
-router.post('/comments',createComment )
+router.post('/comments', createComment)
+
+/** Test for error
+router.post('/comments', (req, res, next) => {
+  console.log('comments route hit');
+  next();
+}, createComment);
+/** */
 
 router.patch('/comments/:id', updateComment)
 

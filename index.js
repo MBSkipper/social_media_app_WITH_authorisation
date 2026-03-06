@@ -119,7 +119,7 @@ The changes required to the design are listed below
             Authorisation: A post only be deleted by the author
         - GET/posts/:id (READ) - get a specific post
         - POST/posts/:id/like-toggle (CREATE) - enables a like to be added 
-            Authorisation: A user can like/unlike only from their account
+            Authorisation: A user can like/unlike only from their account ✅
 
     - comment (All routes are protected) ✅
         - GET/comments?postId= (READ) - get all comments related to a specific post

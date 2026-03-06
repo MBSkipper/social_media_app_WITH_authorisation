@@ -23,9 +23,12 @@ const fetchComments = async (req, res) => {
 
 const createComment = async (req, res) => {
     try {
-        const { post, author, content } = req.body
 
-        const user = await User.findById(author) 
+        const currentUserId = req._id
+        const { post, content } = req.body
+
+        const user = await User.findById(currentUserId) 
+
         if(!user) {
             return res.status(400).json({
             status: "FAILED",
@@ -34,6 +37,7 @@ const createComment = async (req, res) => {
         } 
 
         const postToComment = await Post.findById(post)
+        
         if(!postToComment) {
             return res.status(400).json({
             status: "FAILED",
@@ -43,7 +47,7 @@ const createComment = async (req, res) => {
 
         await Comment.create({
             post,
-            author,
+            author: currentUserId,
             content
         })
 
