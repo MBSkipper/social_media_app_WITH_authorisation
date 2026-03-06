@@ -128,7 +128,9 @@ The changes required to the design are listed below
         - PATCH/comments/:id (UPDATE)
             Authorisation: A comment can only be updated by the author ✅
         - DELETE/comments/:id (DELETE) 
-            Authorisation: A comment can only be deleted by the author or the author of the post ✅
+            Authorisation: A comment can only be deleted by 
+            the author of the comment ✅
+            or the author of the post ✅
 
     
 

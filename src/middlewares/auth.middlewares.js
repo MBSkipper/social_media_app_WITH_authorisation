@@ -63,12 +63,32 @@ const isCommentAuthor = async(req, res, next) => {
     }
 }
 
+const isCommentOrPostAuthor = async(req, res, next) => {
+    try {
+        const currentUserId = req._id
+        const commentId = req.params.id
+
+        const comment = await Comment.findById(commentId).populate('post')
+        if(!comment) {
+            return res.status(400).send('Comment does not exist')
+        }
+
+        if(currentUserId == comment.author || currentUserId == comment.post.author) {
+            next()
+        } else {
+            return res.status(403).send('Authorisation failed. You do not own this comment or the owner of this post.')
+        }
+    } catch (error) {
+        return res.status(500).send('Something went wrong')
+    }
+}
 
 module.exports = {
     isAuthenticated,
     isProfileOwner,
     isPostAuthor,
-    isCommentAuthor
+    isCommentAuthor,
+    isCommentOrPostAuthor
 }
 
 
