@@ -1,7 +1,10 @@
 const express = require('express')
 const router = express.Router()
 //const upload = require('../middlewares/upload') // enables use of file upload if needed 
-const { isAuthenticated } = require('../middlewares/auth.middlewares')
+const { 
+    isAuthenticated,
+    isCommentAuthor
+} = require('../middlewares/auth.middlewares')
 
 const {
     fetchComments,
@@ -16,16 +19,9 @@ router.get('/comments',fetchComments)
 
 router.post('/comments', createComment)
 
-/** Test for error
-router.post('/comments', (req, res, next) => {
-  console.log('comments route hit');
-  next();
-}, createComment);
-/** */
+router.patch('/comments/:id', isCommentAuthor, updateComment)
 
-router.patch('/comments/:id', updateComment)
-
-router.delete('/comments/:id',deleteComment)
+router.delete('/comments/:id',isCommentAuthor, deleteComment)
 
 
 module.exports = router

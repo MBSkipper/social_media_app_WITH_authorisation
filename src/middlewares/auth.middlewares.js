@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const Post = require('../models/post.models')
+const Comment = require('../models/comment.models')
 
 //Authentication middleware
 const isAuthenticated = (req, res, next ) => {
@@ -43,12 +44,31 @@ const isPostAuthor = async(req, res, next) => {
     }
 }
 
+const isCommentAuthor = async(req, res, next) => {
+    try {
+        const currentUserId = req._id
+        const commentId = req.params.id
+
+        const comment = await Comment.findById(commentId)
+        if(!comment) {
+            return res.status(400).send('Comment does not exist')
+        }
+
+        if(currentUserId != comment.author) {
+            return res.status(403).send('Authorisation failed. You do not own this comment.')
+        }
+        next()
+    } catch (error) {
+        return res.status(500).send('Something went wrong')
+    }
+}
 
 
 module.exports = {
     isAuthenticated,
     isProfileOwner,
-    isPostAuthor
+    isPostAuthor,
+    isCommentAuthor
 }
 
 

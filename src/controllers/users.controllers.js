@@ -118,35 +118,6 @@ const updateUser = async (req, res) => {
         })
     }
 } 
-    
-
-/*CHAT GPT CODE FOR updateUser
-const updateUser = async (req, res) => {
-  try {
-    const { id } = req.params
-    const { fullName, bio } = req.body
-
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      { $set: { fullName, bio } },
-      { new: true, runValidators: true } // <-- key change
-    )
-
-    if (!updatedUser) {
-      return res.status(404).json({ status: "FAILED", message: "User not found" })
-    }
-
-    res.json({
-      status: "SUCCESS",
-      message: "User updated successfully!",
-      user: updatedUser
-    })
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ status: "FAILED", error: error.message })
-  }
-}
-********************************** */
 
 const deleteUser = async (req, res) => {
     try{
