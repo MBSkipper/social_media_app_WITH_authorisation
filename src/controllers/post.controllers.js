@@ -114,9 +114,10 @@ const deletePost = async (req, res) => {
 const togglePostLike = async (req, res) => {
     try {
         const { id } = req.params
-        const { userId } = req.body
+        const currentUserId = req._id
 
         const post = await Post.findById(id)
+
         if(!post) {
             return res.status(400).json({
             status: "FAILED",
@@ -124,12 +125,16 @@ const togglePostLike = async (req, res) => {
             })
         } 
 
-        const alreadyLiked = post.likes.some(id => id.toString() == userId)
+        post.likes = post.likes.filter(id => id);
+
+        const alreadyLiked = post.likes.some(id => id.toString() === currentUserId.toString()) 
+       
         if(alreadyLiked) {
-            post.likes = post.likes.filter(id => id.toString() != userId)
+            post.likes = post.likes.filter(id => id.toString() !== currentUserId.toString()) 
+
 
         } else {
-            post.likes.push(userId)
+            post.likes.push(currentUserId)
          }   
             
         await post.save()

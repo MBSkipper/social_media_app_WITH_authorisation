@@ -126,9 +126,9 @@ The changes required to the design are listed below
         - POST/comments (CREATE) 
             Authorisation: User can a post a comment only for their account
         - PATCH/comments/:id (UPDATE)
-            Authorisation: A comment can only be updated by the author
-        - DELETE/comments/:id (DELETE)
-            Authorisation: A comment can only be deleted by the author or the author of the post
+            Authorisation: A comment can only be updated by the author ✅
+        - DELETE/comments/:id (DELETE) 
+            Authorisation: A comment can only be deleted by the author or the author of the post ✅
 
     
 
